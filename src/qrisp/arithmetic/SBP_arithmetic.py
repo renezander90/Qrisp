@@ -1273,7 +1273,7 @@ def phase_polynomial_encoder(qf_list, output_qb, poly, encoding_dic=None):
     """
 
     if isinstance(qf_list, QuantumArray):
-        qf_list = list(qf_list.flatten().qv_array)
+        qf_list = list(qf_list.flatten())
 
     if encoding_dic is not None:
         symbol_list = [encoding_dic[qv] for qv in qf_list]
@@ -1477,7 +1477,7 @@ def app_phase_polynomial(qf_list, poly, encoding_dic=None):
     """
 
     if isinstance(qf_list, QuantumArray):
-        qf_list = list(qf_list.flatten().qv_array)
+        qf_list = list(qf_list.flatten())
 
     if encoding_dic is not None:
         symbol_list = [encoding_dic[qv] for qv in qf_list]
