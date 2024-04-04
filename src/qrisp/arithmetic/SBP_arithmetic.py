@@ -1365,12 +1365,13 @@ def app_sb_phase_polynomial(input_qf_list, poly):
 
         # This describes the case where there is only a single term in the monomial
         # Either a constant or a variable
+        """
         if len(monom) == 1:
-            if isinstance(monom[0], sp.core.symbol.Symbol):
+            if isinstance(monom[0], sp.core.symbol.Symbol) and monom[0] in symbol_list:
                 coeff = 1
                 variables = list(monom)
             else:
-                coeff = float(monom[0])
+                coeff = monom[0]
                 variables = []
     
         # This describes the case where there is multiple terms in the monomial
@@ -1380,9 +1381,21 @@ def app_sb_phase_polynomial(input_qf_list, poly):
         else:
             coeff = 1
             variables = list(monom)
+        """
+
+        coeff = float(1)
+        variables = []
+        for term in monom:
+            if isinstance(term, sp.core.symbol.Symbol) and term in symbol_list:
+                variables.append(term)
+            elif isinstance(term, sp.core.symbol.Symbol):
+                coeff = coeff*term
+            else:
+                coeff = coeff*float(term)
     
         # Append coefficient to y_list
-        y_list.append(float(coeff))
+        #y_list.append(float(coeff))
+        y_list.append(coeff)
     
         # Prepare the qubits on which the RZ (RZZ) should be applied
         rz_qubit_numbers = [symbol_list.index(var) for var in variables]
@@ -1485,18 +1498,22 @@ def app_phase_polynomial(qf_list, poly, encoding_dic=None):
     else:
         symbol_list = get_ordered_symbol_list(poly)
 
+    #print(symbol_list)
+
     if len(symbol_list) != len(qf_list):
         raise Exception(
             "Provided QuantumFloat list does not include the appropriate amount"
             "of elements to encode given polynomial"
         )
     
+    """
     terms = poly.as_ordered_terms()
     total_degree = max(sum(degree(term, gen) for gen in symbol_list) for term in terms)
     if total_degree >2:
         raise Exception(
             "Provided polynomial has degree greater than 2"
         )
+    """
 
     sb_poly_list = []
     for qf in qf_list:
